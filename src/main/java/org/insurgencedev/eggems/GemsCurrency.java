@@ -5,13 +5,12 @@ import me.elementalgaming.ElementalGems.ElementalGems;
 import me.elementalgaming.ElementalGems.GemAPI;
 import org.bukkit.entity.Player;
 import org.insurgencedev.insurgencesets.api.ISetsAPI;
-import org.insurgencedev.insurgencesets.api.currency.Currency;
+import org.insurgencedev.insurgencesets.models.currency.Currency;
 import org.insurgencedev.insurgencesets.models.currency.TransactionTypes;
 
 public class GemsCurrency extends Currency {
 
     private static GemAPI api;
-
 
     public GemsCurrency() {
         super("Gems", "EG");
@@ -26,7 +25,7 @@ public class GemsCurrency extends Currency {
     @NonNull
     @Override
     public TransactionTypes handleDeposit(@NonNull Player player, @NonNull Object o, String s) {
-        if (isInvalidSet(s)) {
+        if (!ISetsAPI.getArmorSetManager().isArmorSetValid(s)) {
             return TransactionTypes.FAIL;
         }
 
@@ -38,7 +37,7 @@ public class GemsCurrency extends Currency {
     @NonNull
     @Override
     public TransactionTypes handleTransaction(@NonNull Player player, @NonNull Object o, String s) {
-        if (isInvalidSet(s)) {
+        if (!ISetsAPI.getArmorSetManager().isArmorSetValid(s)) {
             return TransactionTypes.FAIL;
         }
 
@@ -49,9 +48,5 @@ public class GemsCurrency extends Currency {
 
         api.removeGems(player.getUniqueId(), amount);
         return TransactionTypes.SUCCESS;
-    }
-
-    private boolean isInvalidSet(String armorSet) {
-        return armorSet == null || ISetsAPI.getArmorSetManager().findArmorSet(armorSet) == null;
     }
 }
